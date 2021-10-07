@@ -33,6 +33,7 @@ Extremely simple, yet efficient, file based configuration librairy
 
         // above will give : config.Get("date.created") --> "1/8/2019"
 
+See [examples](./examples/)
 
 ## Typical use
 
@@ -48,9 +49,6 @@ Extremely simple, yet efficient, file based configuration librairy
 
         // set data
         conf.Set("name","John Doe")
-        
-        
-## Examples
 
-See [examples](./examples/)
+
         
