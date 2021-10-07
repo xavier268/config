@@ -4,7 +4,8 @@ Extremely simple, yet efficient, file based configuration librairy
 
 ## Features
 
-* lazily load configuration files for quick startup
+* lazily load configuration files for quick startup upon first read request (Get).
+  * Set will alway overwrite file configuration, even if lazily loaded after Set was called.
 * get/set configuration keys
 * can save modified config on disk 
 
@@ -19,7 +20,7 @@ Extremely simple, yet efficient, file based configuration librairy
   * value starts at the first character following "=" until end of line. No quotes needed. Spaces surrounding the = sign are removed.
 
 * [ mainkey ] defines a section, where all following keys, until another section is defined, are prefixed with *mainkey.*
-* [] defines an empty section.
+* [] defines a section witjhout prefix. This is the default.
 
 ## Example configuration
         // this is a comment
@@ -37,13 +38,9 @@ Extremely simple, yet efficient, file based configuration librairy
 
         import ".../config"
 
-        type struct conf {
-            config.Config
-            other dynamic parameters ...
-            ...
-        }
+        conf := config.New("file1.conf", "file2.conf","/usr/bin/file3.conf", "~/bin/file4.conf")
 
-        // save config data
+        // save config data, including modified values.
         defer conf.Save("myconf.conf")
 
         // access data 
