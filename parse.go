@@ -2,9 +2,10 @@ package config
 
 import (
 	"bufio"
-	"fmt"
 	"strings"
 )
+
+const SP = " \t\r\n"
 
 // parse is called only once, to parse the configuration from disk.
 // parse can happen after a first set, and should not overwite existing keys.
@@ -13,7 +14,6 @@ func (c *config) parse() {
 	f := c.openConfFile()
 	if f == nil {
 		// no file found, we're done !
-		fmt.Println("File not found ! ")
 		return
 	}
 	defer f.Close()
@@ -21,33 +21,29 @@ func (c *config) parse() {
 	scanner := bufio.NewScanner(f)
 	prefix := ""
 	for scanner.Scan() {
-		l := strings.TrimLeft(scanner.Text(), " \t\n\r")
+		l := strings.TrimLeft(scanner.Text(), SP)
 		switch {
 		case strings.HasPrefix(l, "#"):
-			fmt.Println("ignoring : ", l)
 		case strings.HasPrefix(l, "//"):
-			fmt.Println("ignoring : ", l)
 		case strings.HasPrefix(l, "["):
-			fmt.Println("prefix found : ", l)
-			pp := strings.SplitN(l[1:], "]", 1)
+
+			pp := strings.SplitN(l[1:], "]", 2)
 			if len(pp) == 2 {
-				prefix = strings.Trim(pp[0], " \t\n\r")
+				prefix = strings.Trim(pp[0], SP)
 			} else {
 				prefix = ""
 			}
+		case l == "":
 		default:
-			kk := strings.SplitAfterN(l, "=", 1)
+			kk := strings.SplitN(l, "=", 2)
 			if len(kk) == 2 {
-				key := strings.Trim(kk[0], " \t\r\n")
+				key := strings.Trim(kk[0], SP)
 				if len(prefix) != 0 {
 					key = prefix + "." + key
 				}
-				value := kk[1]
-				// TODO - store key,value
-				fmt.Println(key, "-->", value)
-
+				value := strings.TrimLeft(kk[1], SP)
+				c.Set(key, value)
 			}
 		}
 	}
-	fmt.Println(c.values)
 }

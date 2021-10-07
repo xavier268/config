@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -17,10 +16,4 @@ func TestSetGet(t *testing.T) {
 	if c.Get("ttt") != "aaa" {
 		t.FailNow()
 	}
-}
-
-func TestParse(t *testing.T) {
-	c := newConfig("./examples/test.conf")
-	c.Get("VERSION")
-	fmt.Println("Values parsed : \n", c.values)
 }

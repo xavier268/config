@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"hash/maphash"
 	"os"
 	"sync"
@@ -68,10 +67,7 @@ func (c *config) openConfFile() *os.File {
 	for _, fn := range append(c.files, defaultFiles...) {
 		f, err = os.Open(fn)
 		if err == nil {
-			fmt.Println("Found file :", fn)
 			return f
-		} else {
-			fmt.Println("File not found :", fn)
 		}
 	}
 	return nil
