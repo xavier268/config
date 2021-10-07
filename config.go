@@ -8,11 +8,12 @@ import (
 	"strings"
 	"sync"
 )
+
 // Config is the main interface to read or change the configuration keys. All keys are string. Default key value is empty string.
 type Config interface {
 	Get(key string) string
 	Set(key, value string)
-	// Save to the provided file, including all Set operations done.
+	// Save to the provided file name, including all Set operations done until now.
 	Save(fileName string) error
 }
 
