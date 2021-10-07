@@ -1,11 +1,9 @@
 package config
 
 import (
-	"bufio"
 	"fmt"
 	"hash/maphash"
 	"os"
-	"strings"
 	"sync"
 )
 
@@ -26,10 +24,15 @@ type config struct {
 // defaults serached files added to the ones specified
 var defaultFiles = []string{"config.conf", "default.conf"}
 
-// New creates a new config object
+// New creates a new Config
 // file names will be searched, in the provided order, then the default files, until a valid file is fouend.
 // If none is found, all keys have an empty string value.
 func New(files ...string) Config {
+	return newConfig(files...)
+}
+
+// newConfig returns the actual config object for testing purposes.
+func newConfig(files ...string) *config {
 	c := new(config)
 	c.files = files
 	c.keys = make([]string, 0, 10)
@@ -59,58 +62,16 @@ func (c *config) Save(fname string) {
 	// todo
 }
 
-// parse is called only once, to parse the configuration from disk.
-// parse can happen after a first set, and should not overwite existing keys.
-func (c *config) parse() {
-
-	f := c.openConfFile()
-	if f == nil {
-		// no file found, we're done !
-		return
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
-	prefix := ""
-	for scanner.Scan() {
-		l := strings.TrimLeft(scanner.Text(), " \t\n\r")
-		switch {
-		case strings.HasPrefix(l, "#"):
-			fmt.Println("ignoring : ", l)
-		case strings.HasPrefix(l, "//"):
-			fmt.Println("ignoring : ", l)
-		case strings.HasPrefix(l, "["):
-			fmt.Println("prefix found : ", l)
-			pp := strings.SplitN(l[1:], "]", 1)
-			if len(pp) == 2 {
-				prefix = strings.Trim(pp[0], " \t\n\r")
-			} else {
-				prefix = ""
-			}
-		default:
-			kk := strings.SplitAfterN(l, "=", 1)
-			if len(kk) == 2 {
-				key := strings.Trim(kk[0], " \t\r\n")
-				if len(prefix) != 0 {
-					key = prefix + "." + key
-				}
-				value := kk[1]
-				// TODO - store key,value
-				fmt.Println(key, "-->", value)
-
-			}
-		}
-	}
-	fmt.Println(c)
-}
-
 func (c *config) openConfFile() *os.File {
 	var f *os.File
 	var err error
 	for _, fn := range append(c.files, defaultFiles...) {
 		f, err = os.Open(fn)
-		if err != nil {
+		if err == nil {
+			fmt.Println("Found file :", fn)
 			return f
+		} else {
+			fmt.Println("File not found :", fn)
 		}
 	}
 	return nil
