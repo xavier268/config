@@ -26,7 +26,6 @@ func (c *config) parse() {
 		case strings.HasPrefix(l, "#"):
 		case strings.HasPrefix(l, "//"):
 		case strings.HasPrefix(l, "["):
-
 			pp := strings.SplitN(l[1:], "]", 2)
 			if len(pp) == 2 {
 				prefix = strings.Trim(pp[0], SP)
@@ -42,7 +41,12 @@ func (c *config) parse() {
 					key = prefix + "." + key
 				}
 				value := strings.TrimLeft(kk[1], SP)
-				c.Set(key, value)
+				set, h := c.isSet(key)
+				if !set {
+					// Only overwite keys that have not been already changed because we are parsing lazily ...
+					c.values[h] = value
+					c.keys = append(c.keys, key)
+				}
 			}
 		}
 	}

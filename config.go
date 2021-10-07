@@ -1,15 +1,18 @@
 package config
 
 import (
+	"fmt"
 	"hash/maphash"
 	"os"
+	"sort"
+	"strings"
 	"sync"
 )
 
 type Config interface {
 	Get(key string) string
 	Set(key, value string)
-	Save(fileName string)
+	Save(fileName string) error
 }
 
 type config struct {
@@ -47,18 +50,41 @@ func (c *config) Get(k string) (v string) {
 }
 
 func (c *config) Set(k, v string) {
-	c.h.Reset()
-	c.h.WriteString(k)
-	h := c.h.Sum64()
-	if _, ok := c.values[h]; !ok {
+	set, h := c.isSet(k)
+	if !set {
 		// if key does not exists yet, take note of it !
 		c.keys = append(c.keys, k)
 	}
 	c.values[h] = v
 }
 
-func (c *config) Save(fname string) {
-	// todo
+func (c *config) isSet(key string) (bool, uint64) {
+	c.h.Reset()
+	c.h.WriteString(key)
+	h := c.h.Sum64()
+	_, ok := c.values[h]
+	return ok, h
+}
+
+func (c *config) Save(fname string) error {
+	c.once.Do(c.parse)
+	f, err := os.Create(fname)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	sort.Strings(c.keys)
+
+	var p, pp, kk string
+	for _, k := range c.keys {
+		pp, kk = getPrefix(k)
+		if pp != p {
+			fmt.Fprintf(f, "[%s]\n", pp)
+			p = pp
+		}
+		fmt.Fprintf(f, "%s=%s\n", kk, c.Get(k))
+	}
+	return err
 }
 
 func (c *config) openConfFile() *os.File {
@@ -71,4 +97,15 @@ func (c *config) openConfFile() *os.File {
 		}
 	}
 	return nil
+}
+
+// Extract the prefix from a key
+// prefix may be the empty string, and may contain inside '.', but not the final one.
+func getPrefix(key string) (prefix, shortkey string) {
+	kk := strings.Split(key, ".")
+	if len(kk) <= 1 {
+		return "", key
+	}
+
+	return strings.Join(kk[0:len(kk)-1], "."), kk[len(kk)-1]
 }
