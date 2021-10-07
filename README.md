@@ -4,22 +4,22 @@ Extremely simple, yet efficient, file based configuration librairy
 
 ## Features
 
-* lazily load files for quick startup
+* lazily load configuration files for quick startup
 * get/set configuration keys
 * can save modified config on disk 
 
-## Conf file format
+## Configuration file syntax
 
-* file name ending with .conf
 * leading spaces and tabs ignored
 * blank lines are ignored
 * comment line start with # or //
 
 * key = value
   * key has no whitespace nor tabs, it is case sensitive
-  * value starts at the first character following "=" until end of line. No quotes needed. Blanks are significant.
+  * value starts at the first character following "=" until end of line. No quotes needed. Spaces surrounding the = sign are removed.
 
 * [ mainkey ] defines a section, where all following keys, until another section is defined, are prefixed with *mainkey.*
+* [] defines an empty section.
 
 ## Example configuration
         // this is a comment
