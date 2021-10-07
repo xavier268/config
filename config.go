@@ -8,10 +8,11 @@ import (
 	"strings"
 	"sync"
 )
-
+// Config is the main interface to read or change the configuration keys. All keys are string. Default key value is empty string.
 type Config interface {
 	Get(key string) string
 	Set(key, value string)
+	// Save to the provided file, including all Set operations done.
 	Save(fileName string) error
 }
 
@@ -23,7 +24,8 @@ type config struct {
 	h      maphash.Hash      // used to map string keys to their hashed value
 }
 
-// defaults serached files added to the ones specified
+// DefaultFiles searched after the ones specified in New, only if needed.
+// Failure to find a valid config file will NOT generate an error.
 var DefaultFiles = []string{"config.conf", "~/config.conf", "../config.conf", "/config.conf"}
 
 // New creates a new Config.
