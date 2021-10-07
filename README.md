@@ -52,5 +52,5 @@ Extremely simple, yet efficient, file based configuration librairy
         
 ## Examples
 
-See [examples](/xavier268/config/blob/main/examples/example.conf)
+See [examples](./examples/)
         
