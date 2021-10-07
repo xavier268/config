@@ -48,3 +48,9 @@ Extremely simple, yet efficient, file based configuration librairy
 
         // set data
         conf.Set("name","John Doe")
+        
+        
+## Examples
+
+See [examples](/xavier268/config/blob/main/examples/example.conf)
+        
