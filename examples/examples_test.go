@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/xavier/config"
+	"github.com/xavier268/config"
 )
 
 func ExampleConfig_ex1() {
