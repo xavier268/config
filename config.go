@@ -24,10 +24,10 @@ type config struct {
 }
 
 // defaults serached files added to the ones specified
-var defaultFiles = []string{"config.conf", "default.conf"}
+var DefaultFiles = []string{"config.conf", "~/config.conf", "../config.conf", "/config.conf"}
 
-// New creates a new Config
-// file names will be searched, in the provided order, then the default files, until a valid file is fouend.
+// New creates a new Config.
+// Provided file names will be searched, in order, then the DefaultFiles, until a valid file is found.
 // If none is found, all keys have an empty string value.
 func New(files ...string) Config {
 	return newConfig(files...)
@@ -90,7 +90,7 @@ func (c *config) Save(fname string) error {
 func (c *config) openConfFile() *os.File {
 	var f *os.File
 	var err error
-	for _, fn := range append(c.files, defaultFiles...) {
+	for _, fn := range append(c.files, DefaultFiles...) {
 		f, err = os.Open(fn)
 		if err == nil {
 			return f
