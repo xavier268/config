@@ -1,6 +1,6 @@
 # config
 
-[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/xavier268/config)
+[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/xavier268/config)
 
 Extremely simple, yet efficient, file based configuration librairy
 
