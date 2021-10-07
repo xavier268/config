@@ -1,4 +1,7 @@
 # config
+
+[![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://godoc.org/github.com/xavier268/config)
+
 Extremely simple, yet efficient, file based configuration librairy
 
 
