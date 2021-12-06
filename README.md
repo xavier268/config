@@ -8,7 +8,7 @@ Extremely simple, yet efficient, file based configuration librairy
 ## Features
 
 * lazily load configuration files for quick startup upon first read request (Get).
-  * Set will alway overwrite file configuration, even if lazily loaded after Set was called.
+  * Set will always overwrite file configuration, even if lazy loading happens after Set was called.
 * get/set configuration keys
 * can save modified config on disk 
 
@@ -48,7 +48,7 @@ See [examples](./examples/)
         defer conf.Save("myconf.conf")
 
         // access data 
-        if conf.Get() == "" { .... }
+        sn := conf.Get("surname") == "" 
 
         // set data
         conf.Set("name","John Doe")
